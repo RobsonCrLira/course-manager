@@ -1,36 +1,43 @@
 import { Component, OnInit } from "@angular/core";
 import { Course } from "./course";
+import { CourseServices } from "./courses.service";
 
 @Component({
-    selector: 'app-course-list',
     templateUrl: './course-list.component.html'
 })
 export class CourseListComponent implements OnInit {
-    courses: Course[] = [];
+
+    filteredCourses: Course[] = [];
+
+    /*
+    
+    Anotação -> quando uma variavel começa com "_" é para informar há outros Devs 
+    que a mesma só deve ser utilizada na classe que está.
+
+    */
+    _courses: Course[] = [];
+    _filterBy: string;
+
+    constructor(private courseService: CourseServices) {
+
+    }
 
     ngOnInit(): void {
-        this.courses = [
-            {
-                id: 1,
-                name: 'Angular: forms',
-                imageUrl: '',
-                price: 99.99,
-                code: 'SDF-5486',
-                duration: '120',
-                rating: 5.4,
-                releaseDate: 'December, 2, 2019'
-            },
-            {
-                id: 2,
-                name: 'Angular: HTTPS',
-                imageUrl: '',
-                price: 45.99,
-                code: 'DFS-5486',
-                duration: '80',
-                rating: 5.9,
-                releaseDate: 'December, 20, 2019'
-            }
-        ]
+        this._courses = this.courseService.retriveAll();
+        this.filteredCourses = this._courses;
+
     }
+
+
+    set filterBy(value: string) {
+        this._filterBy = value;
+        this.filteredCourses = this._courses.filter((course: Course) => course.name.toLocaleLowerCase().indexOf(this._filterBy.toLocaleLowerCase()) > -1)
+    }
+
+    get filterBy() {
+        return this._filterBy;
+
+    }
+
 
 }
