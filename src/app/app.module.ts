@@ -9,6 +9,7 @@ import { ReplacePipe } from './pipe/replace.pipe';
 import { NavbarComponent } from './navbar/nav-bar.component';
 import { RouterModule } from '@angular/router';
 import { Error404Component } from './error404/error404.component';
+import { CourseInfoComponent } from './courses/course-info.component';
 
 @NgModule({
   declarations: [
@@ -25,10 +26,15 @@ import { Error404Component } from './error404/error404.component';
     FontAwesomeModule,
     RouterModule.forRoot([
       {
-        path: '', redirectTo: 'courses', pathMatch: 'full'
-      }, {
+        path: 'courses/info/:id', component: CourseInfoComponent
+      },
+      {
         path: 'courses', component: CourseListComponent
-      }, {
+      },
+      {
+        path: '', redirectTo: 'courses', pathMatch: 'full'
+      },
+      {
         path: '**', component: Error404Component
       }
     ])
