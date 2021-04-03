@@ -1,24 +1,38 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Counter } from "@fortawesome/fontawesome-svg-core";
+import { Observable } from "rxjs";
 import { Course } from "./course";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CourseService {
-    retriveAll(): Course[] {
-        return COURSES;
-    }
-    retriveById(id: number): Course {
-        return COURSES.find((courseItereator: Course) => courseItereator.id === id);
+
+    private coursesURL: string = 'http://localhost:3100/api/courses';
+
+    constructor(private httpClient: HttpClient) { }
+
+    retriveAll(): Observable<Course[]> {
+        return this.httpClient.get<Course[]>(this.coursesURL);
     }
 
-    save(course: Course): void {
+    retriveById(id: number): Observable<Course> {
+        return this.httpClient.get<Course>(`${this.coursesURL}/${id}`);
+    }
+
+    save(course: Course): Observable<Course> {
         if (course.id) {
-            const index = COURSES.findIndex((courseItereator: Course) => courseItereator.id === course.id);
-            COURSES[index] = course;
+            return this.httpClient.put<Course>(`${this.coursesURL}/${course.id}`, course);
+        } else {
+            return this.httpClient.post<Course>(`${this.coursesURL}`, course);
         }
     }
+
+    deleteById(id: number): Observable<any> {
+        return this.httpClient.delete<any>(`${this.coursesURL}/${id}`);
+    }
+
 }
 
 var COURSES: Course[] = [
